@@ -1,57 +1,31 @@
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local gui = player:WaitForChild("PlayerGui")
+--lib abaixo 
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 
--- Criar botões móveis na tela
-local function criarBotao(nome, posicao, funcao)
-    local botao = Instance.new("TextButton")
-    botao.Name = nome
-    botao.Size = UDim2.new(0, 100, 0, 50)
-    botao.Position = posicao
-    botao.Text = nome
-    botao.Parent = gui
-    botao.MouseButton1Click:Connect(funcao)
-    return botao
-end
+local Window = Fluent:CreateWindow({
+    Title = "Exemplo Básico",
+    Size = UDim2.fromOffset(400, 300),
+    Theme = "Light"
+})
 
--- Função para mostrar a localização dos jogadores
-local function mostrarLocalizacao()
-    while true do
-        for _, jogador in pairs(Players:GetPlayers()) do
-            if jogador ~= player then
-                print(jogador.Name .. " está em: " .. tostring(jogador.Character.PrimaryPart.Position))
-            end
-        end
-        wait(5) -- Atualiza a cada 5 segundos
+local MainTab = Window:AddTab({ Title = "Principal" })
+
+MainTab:AddButton({
+    Title = "Clique-me",
+    Callback = function()
+        print("Botão clicado!")
     end
-end
+})
 
--- Função para garantir estamina infinita
-local function estaminaInfinita()
-    while true do
-        player.Character.Humanoid.WalkSpeed = 50 -- Ajuste o valor conforme necessário
-        wait(1)
-    end
-end
+local Slider = MainTab:AddSlider("Volume", {
+    Title = "Ajuste o Volume",
+    Min = 0, Max = 100, Default = 50
+})
 
--- Função para ativar/desativar localização
-local localizacaoAtiva = false
-local function toggleLocalizacao()
-    localizacaoAtiva = not localizacaoAtiva
-    if localizacaoAtiva then
-        coroutine.wrap(mostrarLocalizacao)()
-    end
-end
+Slider:OnChanged(function(Value)
+    print("Volume ajustado para:", Value)
+end)
 
--- Função para ativar/desativar estamina infinita
-local estaminaAtiva = false
-local function toggleEstamina()
-    estaminaAtiva = not estaminaAtiva
-    if estaminaAtiva then
-        coroutine.wrap(estaminaInfinita)()
-    end
-end
-
--- Criar os botões na tela
-local botaoLocalizacao = criarBotao("Toggle Localização", UDim2.new(0, 50, 0, 50), toggleLocalizacao)
-local botaoEstamina = criarBotao("Toggle Estamina", UDim2.new(0, 50, 0, 110), toggleEstamina)
+Fluent:Notify({
+    Title = "Bem-vindo",
+    Content = "Interface carregada com sucesso!"
+})
